@@ -1,3 +1,4 @@
+function [hFig] = figureSetup(obj)
 %% simulation parameters
 % select colormap 
 cmap = gray(1024);
@@ -14,19 +15,19 @@ scale = 1+.75*contains(pwd,'kound');
 %% setup figure
 % create empty figure
 hFig = figure();
-hFig.Name = "Optical Image";
+hFig.Name = "Optical Image (truth)";
 hFig.InvertHardcopy = "off";
 
 % set window size to desired resolution
 hFig.Position = [50, 50, imageRes/scale];
 
 % plot shape model
-objPatch = patch("Faces",obj.f.v,"Vertices",obj.v,"HandleVisibility","off");
+obj_patch = patch("Faces",obj.f.v,"Vertices",obj.v,"HandleVisibility","off");
 
 % set the shape model color to the baseline
-objPatch.FaceVertexCData = baselineColor;
-objPatch.EdgeColor = "none";
-objPatch.FaceColor = "flat";
+obj_patch.FaceVertexCData = baselineColor;
+obj_patch.EdgeColor = "none";
+obj_patch.FaceColor = "flat";
 
 % hold current axes (optional)
 hold(hFig.CurrentAxes,"on");
