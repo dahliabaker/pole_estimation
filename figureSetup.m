@@ -1,4 +1,4 @@
-function [hFig] = figureSetup(obj)
+function [hFig] = figureSetup(obj,figName,camParams)
 %% simulation parameters
 % select colormap 
 cmap = gray(1024);
@@ -7,19 +7,16 @@ cmap = gray(1024);
 baselineColor = repmat(rand(length(obj.f.v),1),1,3);
 
 %% camera parameters
-camerafov = 0.8;% degrees
-imageRes = [1024,1024];
-
 scale = 1+.75*contains(pwd,'kound');
 
 %% setup figure
 % create empty figure
 hFig = figure();
-hFig.Name = "Optical Image (truth)";
+hFig.Name = figName;
 hFig.InvertHardcopy = "off";
 
 % set window size to desired resolution
-hFig.Position = [50, 50, imageRes/scale];
+hFig.Position = [50, 50, camParams.imageRes/scale];
 
 % plot shape model
 obj_patch = patch("Faces",obj.f.v,"Vertices",obj.v,"HandleVisibility","off");
@@ -33,11 +30,17 @@ obj_patch.FaceColor = "flat";
 hold(hFig.CurrentAxes,"on");
 
 % set plot camera parameters
-camva(camerafov)% camera field of view
-camtarget([0,0,0])% camera target (what it is looking at)
+camva(camParams.fov)% camera field of view
+hFig.CurrentAxes.CameraTarget = [0,0,0];% camera target (what it is looking at)
 camproj("perspective")% camera perspective (this setting is the realistic one)
-campos([100,0,0])% default camera position
-
+pos = [100,0,0];
+hFig.CurrentAxes.CameraPosition = pos;% default camera position
+[ obsLong, obsLat, ~] = cart2sph(pos(1),pos(2),pos(3));
+if obsLong == 0 && obsLat > 0 
+    hFig.CurrentAxes.CameraUpVector = [0 -1 0; 1 0 0; 0 0 1]*[0 1 0]';
+else
+    hFig.CurrentAxes.CameraUpVector = [0 0 1];
+end
 % set plot axes
 axis tight equal
 axis off% turn the axes labels off
