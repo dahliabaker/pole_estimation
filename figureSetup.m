@@ -1,4 +1,4 @@
-function [hFig] = figureSetup(obj,figName,camParams)
+function [hFig,obj_patch] = figureSetup(obj,figName,camParams)
 %% simulation parameters
 % select colormap 
 cmap = gray(1024);
