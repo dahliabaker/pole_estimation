@@ -43,6 +43,9 @@ end
 %% Run EKF
 
 dyn = 0; %Which Dynamics Model?
+%Time update (edit ekf pole to get each step update)
+% [hFig,obj_patch] = figureSetup(obj,figName,camParams);
+% [hFig,obj_patch] = figureSetup(obj,figName,camParams);
 [x_plus,P_plus] = ekf_pole(X_0,P_0,time,pred_img,obs_img,dyn);
 
 % Do fun stuff with results :)

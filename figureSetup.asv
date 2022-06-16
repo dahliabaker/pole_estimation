@@ -4,11 +4,11 @@ function [hFig,obj_patch] = figureSetup(obj,figName,camParams)
 cmap = gray(1024);
 
 % set baseline color
-baselineColor = repmat(zeros(length(obj.f.v),1),1,3);
+baselineColor = repmat(rand(length(obj.f.v),1),1,3);
 
 %% camera parameters
 % scale = 1+.75*contains(pwd,'kound');
-scale = 1+0.5;
+scale = 1+.5
 
 %% setup figure
 % create empty figure
@@ -17,7 +17,7 @@ hFig.Name = figName;
 hFig.InvertHardcopy = "off";
 
 % set window size to desired resolution
-hFig.Position = [5, 5, camParams.imageRes/scale];
+hFig.Position = [50, 50, camParams.imageRes/scale];
 
 % plot shape model
 obj_patch = patch("Faces",obj.f.v,"Vertices",obj.v,"HandleVisibility","off");
@@ -45,7 +45,7 @@ end
 % set plot axes
 axis tight equal
 axis off% turn the axes labels off
-set(hFig.CurrentAxes,'LooseInset',get(hFig.CurrentAxes,'TightInset'));% remove padding of the plot axes
+set(gca,'LooseInset',get(gca,'TightInset'));% remove padding of the plot axes
 colormap(cmap)
 hFig.CurrentAxes.Color = "k";% set the axes background color to black
 hFig.Color = "k";% set the figure background color to black

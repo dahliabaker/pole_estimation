@@ -1,5 +1,5 @@
 function shadows = getShadows(facets,vert,fn,sunDir) %#codegen
-% facets: obj_patch.Faces
+% facets: obj_patch.faces
 % vert: obj_patch.Vertices
 % fn: faceNormals (from calculateFaceNormals.m)
 % sunDir: [x y z] , [1 0 0] 
