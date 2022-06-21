@@ -1,4 +1,4 @@
-% EKF time update step (Not full EKF)
+% EKF time update one time step (Not full EKF)
 %
 % inputs:
 % X_plus = previous best estimate of state

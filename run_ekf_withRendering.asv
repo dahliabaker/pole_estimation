@@ -54,7 +54,7 @@ for i = 1:length(time)
     shadows = getShadows(obj_patch2.Faces,obj_patch2.Vertices,faceNormals,[1 0 0]');
 
     obj_patch2.FaceVertexCData(shadows>0,:) = repmat(shadows(shadows>0),1,3);
-    pred_img_struct = getframe(hFig2);
+    pred_img_struct = getframe(hFig);
     pred_img = pred_img_struct.cdata;
     
     %Grayscale
@@ -62,7 +62,7 @@ for i = 1:length(time)
     obs_img_gray = mat2gray(obs_img);
 
     %EKF measurement update
-    [x_plus(i,:),P_plus(:,:,i)] = ekf_measurement_update(x_minus,P_minus,obs_img_gray(:,:,1),pred_img_gray(:,:,1),n);
+%    [x_plus(i,:),P_plus(:,:,i)] = ekf_measurement_update(x_minus,P_minus,obs_img_gray(:,:,1),pred_img_gray(:,:,1),n);
 
     %Reset predicted back to observed
     rotate(obj_patch2,omega_minus(i,:),-dtheta,[0 0 0]);
