@@ -1,0 +1,16 @@
+
+% figureSetup() x2 (pred and obs)
+
+% for i = 1:n
+    % time update - ekf prop
+    % image generation
+    
+    % all below for both figures (x2)
+    % rotate object by delta_t (5 degrees)
+    % recompute face normal calculateFaceNormals.m using obj_patch (NOT OBJ.F....)
+    % recompute shadows using getShadows.m
+    % reset obj_patch color to black (zeros)
+    % add shadows to obj (finds facets that are lit) obj_patch.FaceVertexCData(shadows>0,:) = repmat(shadows(shadows>0),1,3);
+    % getframe get both images 
+    % ekf measurement update step
+% end
