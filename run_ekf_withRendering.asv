@@ -1,8 +1,6 @@
 % Run EKF with image rendering
 clc, clear, close all;
 
-% Run file for ekf_ploe.m
-clc, clear, close all;
 
 tic
 
@@ -33,7 +31,6 @@ camParams.fov = 0.8;
 
 for i = 1:length(time)
 
-
     [x_minus,P_minus] = ekf_time_update(X_0,P_0,dtheta,n,dyn);
     omega_minus(i,:) = x_minus(n-2:n);
     
@@ -54,7 +51,7 @@ for i = 1:length(time)
     shadows = getShadows(obj_patch2.Faces,obj_patch2.Vertices,faceNormals,[1 0 0]');
 
     obj_patch2.FaceVertexCData(shadows>0,:) = repmat(shadows(shadows>0),1,3);
-    pred_img_struct = getframe(hFig);
+    pred_img_struct = getframe(hFig2);
     pred_img = pred_img_struct.cdata;
     
     %Grayscale
@@ -62,7 +59,7 @@ for i = 1:length(time)
     obs_img_gray = mat2gray(obs_img);
 
     %EKF measurement update
-%    [x_plus(i,:),P_plus(:,:,i)] = ekf_measurement_update(x_minus,P_minus,obs_img_gray(:,:,1),pred_img_gray(:,:,1),n);
+%     [x_plus(i,:),P_plus(:,:,i)] = ekf_measurement_update(x_minus,P_minus,obs_img_gray(:,:,1),pred_img_gray(:,:,1),n);
 
     %Reset predicted back to observed
     rotate(obj_patch2,omega_minus(i,:),-dtheta,[0 0 0]);
