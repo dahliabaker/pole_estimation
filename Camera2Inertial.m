@@ -8,8 +8,8 @@
 
 function [NC] = Camera2Inertial(r)
 
-Cz = -r/norm(r);
-Cx = cross([0 0 1],r);
+Cz = r/norm(r);
+Cx = cross(Cz,[0 0 1]);
 Cy = cross(Cz,Cx);
 
 NC = [Cx ; Cy ; Cz];

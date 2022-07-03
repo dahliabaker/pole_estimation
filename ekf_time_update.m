@@ -17,7 +17,7 @@ function [X_minus,P_minus] = ekf_time_update(x_plus,P_plus,dt,n,dyn)
 
 %     num = length(state_wstm(:,1));
     %state(1,1:56) = state_wstm(num,1:56);
-    Q = 1e-6*eye(9);
+    Q = 1e-9*eye(9);
     X_minus = state_wstm(end,1:n)';
     phi_dot = state_wstm(end,n+1:n^2);
     phi_dot = reshape(phi,n,n);

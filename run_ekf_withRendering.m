@@ -4,12 +4,12 @@ clc, clear, close all;
 
 tic
 
-rng(1);
+omega_0 = [1 0 0];
 
-X_0 = [100 0 0 0 0 0 1/sqrt(2) 1/sqrt(2) 0]';
-P_0 = eye(9);
+X_0 = [100 0 0 0 0 0 omega_0]';
+P_0 = 1e0*eye(9);
 dtheta = 5;
-time = 0:dtheta:10*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
+time = 0:dtheta:8*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
 n = 9;
 dyn = 0; % Set desired dynamics model
 
@@ -23,7 +23,14 @@ camParams.fov = 0.8;
 x_plus = X_0;
 P_plus = P_0;
 
-for i = 1:length(time)
+sigma_omega_x = nan(1,length(time))
+sigma_omega_x(1) = sqrt(P_plus(n-2,n-2));
+sigma_omega_y = nan(1,length(time))
+sigma_omega_y(1) = sqrt(P_plus(n-1,n-1));
+sigma_omega_z = nan(1,length(time))
+sigma_omega_z(1) = sqrt(P_plus(n,n));
+
+for i = 1:length(time)-1
 
     [x_minus,P_minus] = ekf_time_update(x_plus(:,i),P_plus(:,:,i),dtheta,n,dyn);
     omega_minus(i,:) = x_minus(n-2:n);
@@ -58,7 +65,69 @@ for i = 1:length(time)
     %Reset predicted back to observed
     rotate(obj_patch2,omega_minus(i,:),-dtheta,[0 0 0]);
     rotate(obj_patch2,[0 0 1],dtheta,[0 0 0]);
+    omega_plus = x_plus(n-2:n);
+%     rotate(obj_patch2,omega_plus,dtheta,[0 0 0]); (Maybe use omega_plus to backprop)
+
+    sigma_omega_x(i+1) = sqrt(P_plus(n-2,n-2,i+1));
+    sigma_omega_y(i+1) = sqrt(P_plus(n-1,n-1,i+1));
+    sigma_omega_z(i+1) = sqrt(P_plus(n,n,i+1));
+
 end
+
+
+%% Results
+figure()
+plot(time,x_plus(n-2:n,:))
+xlabel('\theta from inertial (from \theta_0)')
+ylabel('pole estimates')
+legend('\omega_x','\omega_y','\omega_z')
+title('Pole Estimates')
+ylim([-.1,1.1])
+errors = x_plus(n-2:n,:)-[zeros(2,length(time)) ; ones(1,length(time))];
+
+figure()
+sgtitle('Pole Estimate Errors')
+subplot(3,1,1)
+plot(time,errors(1,:))
+hold on
+plot(time,3*sigma_omega_x)
+plot(time,-3*sigma_omega_x)
+% ylim([-1,1])
+xlabel('\theta from inertial (from \theta_0)')
+ylabel('\epsilon_x')
+legend('\omega','+3*\sigma','-3\sigma')
+
+subplot(3,1,2)
+plot(time,errors(2,:))
+hold on
+plot(time,3*sigma_omega_y)
+plot(time,-3*sigma_omega_y)
+xlabel('\theta from inertial (from \theta_0)')
+ylabel('\epsilon_y')
+% ylim([-0.1,0.1])
+
+subplot(3,1,3)
+plot(time,errors(3,:))
+hold on
+plot(time,3*sigma_omega_z)
+plot(time,-3*sigma_omega_z)
+xlabel('\theta from inertial (from \theta_0)')
+ylabel('\epsilon_z')
+% ylim([-0.1,0.1])
+
+for i = 1:length(time)
+angle_error(i) = acosd(dot(x_plus(n-2:n,i),[0 0 1])/norm(x_plus(n-2:n,i)));
+end
+
+figure()
+plot(time,angle_error)
+% ylim([-3e-2,3e-2])
+xlabel('\theta from inertial (from \theta_0)')
+ylabel('angle between correct pole and estimated pole [deg]')
+legend('angular error')
+title('Pole Estimate Errors (By Angle)')
+
+
 
 toc
 

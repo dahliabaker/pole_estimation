@@ -1,4 +1,4 @@
-% EKF Measurement Update (with image rendering)
+% EKF Measurement Update
 
 function [x_plus,P_plus] = ekf_measurement_update(x_minus,P_minus,obs,pred,n)
 
@@ -7,10 +7,11 @@ DCM = Camera2Inertial(x_sc);
 
 [~,r_angle,~] = maskmatch(obs,pred);
 omega = x_minus(n-2:n);
-omega_hat_cam = [cosd(r_angle) , sind(r_angle) , 0] %Check camera frame, 0 should be in z location
+omega_hat_cam = [cosd(r_angle) , sind(r_angle) , 0]; %Check camera frame, 0 should be in z location
+% tform*[0 0 1] try this
 omega_hat = DCM*omega_hat_cam';
 
-R = 1e-6*eye(3);
+R = 1e0*eye(3);
 
 r = omega_hat/norm(omega_hat);  %NP*omega_hat - omega; Use the commented one once the camera frame is done correctly
 H = [zeros(3,3) zeros(3,3) eye(3)];
