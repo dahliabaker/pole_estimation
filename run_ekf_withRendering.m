@@ -4,11 +4,11 @@ clc, clear, close all;
 
 tic
 
-omega_0 = [1 0 0];
+omega_0 = [1/sqrt(3) 1/sqrt(3) 1/sqrt(3)];
 
 X_0 = [100 0 0 0 0 0 omega_0]';
-P_0 = 1e0*eye(9);
-dtheta = 5;
+P_0 = 1e9*eye(9);
+dtheta = 10;
 time = 0:dtheta:8*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
 n = 9;
 dyn = 0; % Set desired dynamics model
@@ -82,7 +82,7 @@ xlabel('\theta from inertial (from \theta_0)')
 ylabel('pole estimates')
 legend('\omega_x','\omega_y','\omega_z')
 title('Pole Estimates')
-ylim([-.1,1.1])
+% ylim([-.1,1.1])
 errors = x_plus(n-2:n,:)-[zeros(2,length(time)) ; ones(1,length(time))];
 
 figure()
@@ -92,7 +92,7 @@ plot(time,errors(1,:))
 hold on
 plot(time,3*sigma_omega_x)
 plot(time,-3*sigma_omega_x)
-% ylim([-1,1])
+ylim([-3,3])
 xlabel('\theta from inertial (from \theta_0)')
 ylabel('\epsilon_x')
 legend('\omega','+3*\sigma','-3\sigma')
@@ -104,7 +104,7 @@ plot(time,3*sigma_omega_y)
 plot(time,-3*sigma_omega_y)
 xlabel('\theta from inertial (from \theta_0)')
 ylabel('\epsilon_y')
-% ylim([-0.1,0.1])
+ylim([-3,3])
 
 subplot(3,1,3)
 plot(time,errors(3,:))
@@ -113,11 +113,18 @@ plot(time,3*sigma_omega_z)
 plot(time,-3*sigma_omega_z)
 xlabel('\theta from inertial (from \theta_0)')
 ylabel('\epsilon_z')
-% ylim([-0.1,0.1])
+ylim([-3,3])
 
 for i = 1:length(time)
 angle_error(i) = acosd(dot(x_plus(n-2:n,i),[0 0 1])/norm(x_plus(n-2:n,i)));
 end
+
+figure()
+plot(time,errors)
+xlabel('\theta from inertial (from \theta_0)')
+ylabel('pole estimate errors')
+legend('\omega_x','\omega_y','\omega_z')
+title('Pole Estimate Errors')
 
 figure()
 plot(time,angle_error)
