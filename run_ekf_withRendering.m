@@ -4,20 +4,28 @@ clc, clear, close all;
 
 tic
 
+n = 9;
+
 omega_0 = [1/sqrt(3) 1/sqrt(3) 1/sqrt(3)];
 
 X_0 = [100 0 0 0 0 0 omega_0]';
-P_0 = 1e9*eye(9);
-dtheta = 10;
+P_0 = 1e6*eye(9);
+
+%Use below to change only the three pole estimate covariances
+% P_0(n-2,n-2) = 4;
+% P_0(n-1,n-1) = 4;
+% P_0(n,n) = 4;
+
+dtheta = 0.001;
 time = 0:dtheta:8*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
-n = 9;
 dyn = 0; % Set desired dynamics model
 
-load('bennu200kData.mat')
 camParams.imageRes = [900 900];
 camParams.fov = 0.8;
-
+% Figure Set up
+load('bennu200kData.mat') % Observed setup (HIGHEST FIDELITY MODEL AVAILABLE)
 [hFig,obj_patch] = figureSetup(obj,'figName',camParams);
+load('bennu_50kData.mat') % Predicted setup (LOWER FIDELITY MODEL)
 [hFig2,obj_patch2] = figureSetup(obj,'figName2',camParams);
 
 x_plus = X_0;
@@ -76,13 +84,15 @@ end
 
 
 %% Results
+close all;
+
 figure()
 plot(time,x_plus(n-2:n,:))
 xlabel('\theta from inertial (from \theta_0)')
 ylabel('pole estimates')
 legend('\omega_x','\omega_y','\omega_z')
 title('Pole Estimates')
-% ylim([-.1,1.1])
+ylim([-.1,1.1])
 errors = x_plus(n-2:n,:)-[zeros(2,length(time)) ; ones(1,length(time))];
 
 figure()
@@ -95,7 +105,7 @@ plot(time,-3*sigma_omega_x)
 ylim([-3,3])
 xlabel('\theta from inertial (from \theta_0)')
 ylabel('\epsilon_x')
-legend('\omega','+3*\sigma','-3\sigma')
+legend('\omega','+3\sigma','-3\sigma')
 
 subplot(3,1,2)
 plot(time,errors(2,:))
