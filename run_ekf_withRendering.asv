@@ -17,7 +17,7 @@ P_0 = 1e6*eye(9);
 % P_0(n,n) = 4;
 
 dtheta = 0.001;
-time = 0:dtheta:9*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
+time = 0:dtheta:8*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
 dyn = 0; % Set desired dynamics model
 
 camParams.imageRes = [900 900];
@@ -95,10 +95,9 @@ legend('\omega_x','\omega_y','\omega_z')
 title('Pole Estimates')
 ylim([-.1,1.1])
 errors = x_plus(n-2:n,:)-[zeros(2,length(time)) ; ones(1,length(time))];
-subtitle('50k Predicted, 200k Observed')
 
 figure()
-sgtitle('Pole Estimate Errors: 50k Predicted, 200k Observed')
+sgtitle('Pole Estimate Errors')
 subplot(3,1,1)
 plot(time,errors(1,:))
 hold on
@@ -127,7 +126,6 @@ xlabel('\theta from inertial (from \theta_0)')
 ylabel('\epsilon_z')
 ylim([-3,3])
 
-
 for i = 1:length(time)
 angle_error(i) = acosd(dot(x_plus(n-2:n,i),[0 0 1])/norm(x_plus(n-2:n,i)));
 end
@@ -138,7 +136,6 @@ xlabel('\theta from inertial (from \theta_0)')
 ylabel('pole estimate errors')
 legend('\omega_x','\omega_y','\omega_z')
 title('Pole Estimate Errors')
-subtitle('50k Predicted, 200k Observed')
 
 figure()
 plot(time,angle_error)
@@ -147,7 +144,6 @@ xlabel('\theta from inertial (from \theta_0)')
 ylabel('angle between correct pole and estimated pole [deg]')
 legend('angular error')
 title('Pole Estimate Errors (By Angle)')
-subtitle('50k Predicted, 200k Observed')
 
 
 
