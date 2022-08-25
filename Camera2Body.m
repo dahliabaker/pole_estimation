@@ -8,9 +8,9 @@
 
 function [CB] = Camera2Body(r,theta)
 
-[NC] = Camera2Inertial(r)
+[NC] = Camera2Inertial(r);
 
-[NB] = Body2Inertial(theta)
+[NB] = Body2Inertial(theta);
 
 CB = NC'*NB;
 BC = CB';

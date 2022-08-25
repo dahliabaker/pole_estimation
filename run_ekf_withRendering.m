@@ -8,7 +8,7 @@ n = 9;
 
 omega_0 = [1/sqrt(3) 1/sqrt(3) 1/sqrt(3)];
 
-X_0 = [100 0 0 0 0 0 omega_0]';
+X_0 = [100 0 0 0 -0.001 0 omega_0]';
 P_0 = 1e6*eye(9);
 
 %Use below to change only the three pole estimate covariances
@@ -16,9 +16,9 @@ P_0 = 1e6*eye(9);
 % P_0(n-1,n-1) = 4;
 % P_0(n,n) = 4;
 
-dtheta = 0.001;
+dtheta = 5;
 time = 0:dtheta:9*dtheta; %(360-dtheta); % Currently the angle, not the time (Probably needs fixing)
-dyn = 0; % Set desired dynamics model
+dyn = 1; % Set desired dynamics model
 
 camParams.imageRes = [900 900];
 camParams.fov = 0.8;
@@ -26,7 +26,7 @@ camParams.fov = 0.8;
 % Figure Set up
 load('bennu200kData.mat') % Observed setup (HIGHEST FIDELITY MODEL AVAILABLE)
 [hFig,obj_patch] = figureSetup(obj,'figName',camParams);
-load('bennu_50kData.mat') % Predicted setup (LOWER FIDELITY MODEL)
+% load('bennu200kData.mat') % Predicted setup (LOWER FIDELITY MODEL)
 [hFig2,obj_patch2] = figureSetup(obj,'figName2',camParams);
 
 x_plus = X_0;
